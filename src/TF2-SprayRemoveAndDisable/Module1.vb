@@ -1,8 +1,13 @@
-﻿Imports Microsoft.Win32
+﻿Imports System.IO
+Imports Gameloop.Vdf
+Imports Gameloop.Vdf.JsonConverter
+Imports Gameloop.Vdf.Linq
+Imports Microsoft.Win32
 Imports Newtonsoft.Json
-Imports Newtonsoft.Json.Linq
+Imports TF2_SprayRemoveAndDisable.Models
 
 Module Module1
+    Public Property Result() As Category
 
     Sub Main()
         ' Check for Steam
@@ -52,6 +57,8 @@ Module Module1
 
                 Console.WriteLine("Library Folders File found.")
 
+                Dim volvo As VProperty = VdfConvert.Deserialize(File.ReadAllText(PID + "\steamapps\libraryfolders.vdf"))
+                Console.WriteLine(volvo.ToJson().ToObject(Of Category)())
 
             ElseIf Not My.Computer.FileSystem.FileExists(PID + "\steamapps\libraryfolders.vdf") Then
                 Debug.WriteLine(PID + "\steamapps\libraryfolders.vdf not detected.")
@@ -67,3 +74,25 @@ Module Module1
     End Sub
 
 End Module
+
+
+
+Namespace Models
+
+    Public Class Category
+
+        <JsonProperty("path")>
+        Public Property steamPaths As String
+
+        <JsonProperty("label")>
+        Public Property steamLabel As String
+
+        <JsonProperty("mounted")>
+        Public Property steamMounted As Integer
+
+        <JsonProperty("contentid")>
+        Public Property steamContentID As Integer
+
+    End Class
+
+End Namespace
